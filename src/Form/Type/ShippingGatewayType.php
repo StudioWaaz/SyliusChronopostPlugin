@@ -25,7 +25,8 @@ final class ShippingGatewayType extends AbstractType
         'SAMEDAY',
         'CHRONORDV',
         'CHRONOFRESH13',
-        'CHRONOFREEZE13'
+        'CHRONOFREEZE13',
+        'SHOPTOSHOP'
     ];
 
     public function __construct(private EntityManagerInterface $em)

@@ -148,7 +148,7 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
                 case 'f':
                     $data['customerCivility'] = 'L';
                     break;
-                
+
                 default:
                     $data['customerCivility'] = 'E';
                     break;
@@ -190,7 +190,7 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
                 case 'f':
                     $data['recipientCivility'] = 'L';
                     break;
-                
+
                 default:
                     $data['recipientCivility'] = 'E';
                     break;
@@ -221,52 +221,23 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
 
     private function guessProductCode(string $productType): string
     {
-        switch ($productType) {
-            case 'CHRONO13':
-                return '01';
-                break;
+        $productCodes = [
+            'CHRONO13' => '01',
+            'CHRONO10' => '02',
+            'CHRONO18' => '16',
+            'CHRONORELAIS' => '86',
+            'RELAISDOM' => '86',
+            'CHRONOCLASSIC' => '44',
+            'CHRONOEXPRESS' => '17',
+            'RELAISEUROPE' => '49',
+            'SAMEDAY' => '2P',
+            'CHRONORDV' => '2E',
+            'CHRONOFRESH13' => '2R',
+            'CHRONOFREEZE13' => '2S',
+            'SHOPTOSHOP' => '5X'
+        ];
 
-            case 'CHRONO10':
-                return '02';
-                break;
-
-            case 'CHRONO18':
-                return '16';
-                break;
-
-            case 'CHRONORELAIS':
-            case 'RELAISDOM':
-                return '86';
-                break;
-
-            case 'CHRONOCLASSIC':
-                return '44';
-                break;
-
-            case 'CHRONOEXPRESS':
-                return '17';
-                break;
-            
-            case 'RELAISEUROPE':
-                return '49';
-                break;
-
-            case 'SAMEDAY':
-                return '2P';
-                break;
-
-            case 'CHRONORDV':
-                return '2E';
-                break;
-
-            case 'CHRONOFRESH13':
-                return '2R';
-                break;
-            
-            case 'CHRONOFREEZE13':
-                return '2S';
-                break;
-        }
+        return $productCodes[$productType] ?? '';
     }
 
     public function getLabelContent(): ?array
