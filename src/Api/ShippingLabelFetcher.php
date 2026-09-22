@@ -233,6 +233,7 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             'SAMEDAY' => '2P',
             'CHRONORDV' => '2E',
             'CHRONOFRESH13' => '2R',
+            'CHRONOFRESH18' => '5Z',
             'CHRONOFREEZE13' => '2S',
             'SHOPTOSHOP' => '5X'
         ];

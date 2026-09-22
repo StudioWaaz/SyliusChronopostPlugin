@@ -25,6 +25,7 @@ final class ShippingGatewayType extends AbstractType
         'SAMEDAY',
         'CHRONORDV',
         'CHRONOFRESH13',
+        'CHRONOFRESH18',
         'CHRONOFREEZE13',
         'SHOPTOSHOP'
     ];
