@@ -30,9 +30,14 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             'password' => $shippingGateway->getConfigValue('password'),
         ]);
 
-        if (in_array($this->guessProductType($shippingGateway, $shipment), ['CHRONOFRESH13', 'CHRONOFRESH18'], true)) {
+        $expirationDays = $shippingGateway->getConfigValue('fresh_expiration_days');
+
+        if (
+            in_array($this->guessProductType($shippingGateway, $shipment), ['CHRONOFRESH13', 'CHRONOFRESH18'], true)
+            && (int) $expirationDays > 0
+        ) {
             $data['scheduledValue'] = [
-                'expirationDate' => (new \DateTimeImmutable('now'))->modify('+10 days'),
+                'expirationDate' => (new \DateTimeImmutable('now'))->modify(sprintf('+%d days', (int) $expirationDays)),
             ];
         }
 
