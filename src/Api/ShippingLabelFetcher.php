@@ -66,12 +66,16 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
 
     private function getSkybillValue($shippingGateway, $shipment, $weight): array
     {
+        if ($shippingGateway->getConfigValue('weight_unit') === 'g') {
+            $weight /= 1000;
+        }
+
         return [
             'evtCode' => 'DC',
             'productCode' => $this->guessProductCode($this->guessProductType($shippingGateway, $shipment)),
             'shipDate' => date('c'),
             'shipHour' => date('G'),
-            'Weight' => ($weight > 0) ? $weight : 1,
+            'weight' => ($weight > 0) ? $weight : 1,
             'weightUnit' => 'KGM',
             'service' => 0,
             'objectType' => 'MAR',

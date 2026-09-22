@@ -70,6 +70,14 @@ final class ShippingGatewayType extends AbstractType
                     'Format PDF sans preuve de dépôt' => 'SPD'
                 ]
             ])
+            ->add('weight_unit', ChoiceType::class, [
+                'label' => 'ikuzo.ui.chronopost.weight_unit',
+                'required' => true,
+                'choices' => [
+                    'Grammes' => 'g',
+                    'Kilogrammes' => 'kg',
+                ],
+            ])
             ->add('recipientPreAlert', CheckboxType::class, [
                 'label' => 'ikuzo.ui.chronopost.recipient_pre_alert',
                 'required' => false,
