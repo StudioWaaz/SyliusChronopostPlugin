@@ -30,6 +30,12 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             'password' => $shippingGateway->getConfigValue('password'),
         ]);
 
+        if (in_array($this->guessProductType($shippingGateway, $shipment), ['CHRONOFRESH13', 'CHRONOFRESH18'], true)) {
+            $data['scheduledValue'] = [
+                'expirationDate' => (new \DateTimeImmutable('now'))->modify('+10 days'),
+            ];
+        }
+
         try {
             $this->response = $this->soapClient->createShipment($data);
         } catch (\SoapFault $exception) {
