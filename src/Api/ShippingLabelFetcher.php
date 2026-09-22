@@ -23,7 +23,7 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             'headerValue' => $this->getHeaderValue($shippingGateway),
             'shipperValue' => $this->getShipperValue($shippingGateway),
             'customerValue' => $this->getCustomerValue($shipment),
-            'recipientValue' => $this->getRecipientValue($shipment),
+            'recipientValue' => $this->getRecipientValue($shippingGateway, $shipment),
             'refValue' => $this->getRefValue($shippingGateway, $shipment),
             'skybillValue' => $this->getSkybillValue($shippingGateway, $shipment, $weight),
             'skybillParamsValue' => $this->getSkybillParams($shippingGateway),
@@ -158,7 +158,7 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
         return $data;
     }
 
-    private function getRecipientValue($shipment): array
+    private function getRecipientValue($shippingGateway, $shipment): array
     {
         $shippingAddress = $shipment->getOrder()->getShippingAddress();
 
@@ -174,7 +174,7 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             'recipientEmail' => null,
             'recipientPhone' => $shippingAddress->getPhoneNumber(),
             'recipientMobilePhone' => $shippingAddress->getPhoneNumber(),
-            'recipientPreAlert' => '0'
+            'recipientPreAlert' => $shippingGateway->getConfigValue('recipientPreAlert') ? '1' : '0'
         ];
 
         if ($shippingAddress->getCustomer() !== null) {
