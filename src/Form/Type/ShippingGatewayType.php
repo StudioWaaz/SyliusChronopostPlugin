@@ -88,11 +88,12 @@ final class ShippingGatewayType extends AbstractType
             ])
         ;
 
-        foreach (self::$products as $product) {
-            foreach ($this->em->getRepository(ShippingMethod::class)->findAll() as $shippingMethod) {
-                $choices[$shippingMethod->getCode()] = $shippingMethod->getId();
-            }
+        $choices = [];
+        foreach ($this->em->getRepository(ShippingMethod::class)->findBy(['enabled' => true]) as $shippingMethod) {
+            $choices[sprintf('%s (%s)', $shippingMethod->getName(), $shippingMethod->getCode())] = $shippingMethod->getId();
+        }
 
+        foreach (self::$products as $product) {
             $builder->add('product_'.$product, ChoiceType::class, [
                 'label' => 'ikuzo.ui.chronopost.products.'.$product,
                 'choices' => $choices,
