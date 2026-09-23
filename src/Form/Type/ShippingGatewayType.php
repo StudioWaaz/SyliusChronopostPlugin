@@ -90,7 +90,11 @@ final class ShippingGatewayType extends AbstractType
 
         $choices = [];
         foreach ($this->em->getRepository(ShippingMethod::class)->findBy(['enabled' => true]) as $shippingMethod) {
-            $choices[sprintf('%s (%s)', $shippingMethod->getName(), $shippingMethod->getCode())] = $shippingMethod->getId();
+            $translation = $shippingMethod->getTranslations()?->first();
+            $name = $translation ? $translation->getName() : null;
+            $label = $name ? sprintf('%s (%s)', $name, $shippingMethod->getCode()) : $shippingMethod->getCode();
+
+            $choices[$label] = $shippingMethod->getId();
         }
 
         foreach (self::$products as $product) {
