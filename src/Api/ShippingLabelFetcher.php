@@ -133,7 +133,9 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
 
     public function getCustomerValue($shipment): array
     {
-        $shippingAddress = $shipment->getOrder()->getShippingAddress();
+        $order = $shipment->getOrder();
+        $shippingAddress = $order->getShippingAddress();
+        $customer = $order->getCustomer();
 
         $data = [
             'customerCivility' => 'E',
@@ -150,12 +152,9 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             'customerPreAlert' => '0'
         ];
 
-        if ($shippingAddress->getCustomer() !== null) {
-            $data['customerEmail'] = $shippingAddress->getCustomer()->getEmail();
-        }
-
-        if ($shippingAddress->getCustomer() !== null) {
-            switch ($shippingAddress->getCustomer()->getGender()) {
+        if ($customer !== null) {
+            $data['customerEmail'] = $customer->getEmail();
+            switch ($customer->getGender()) {
                 case 'm':
                     $data['customerCivility'] = 'M';
                     break;
@@ -175,7 +174,9 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
 
     private function getRecipientValue($shippingGateway, $shipment): array
     {
-        $shippingAddress = $shipment->getOrder()->getShippingAddress();
+        $order = $shipment->getOrder();
+        $customer = $order->customer();
+        $shippingAddress = $order->getShippingAddress();
 
         $data = [
             'recipientCivility' => 'E',
@@ -192,12 +193,9 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             'recipientPreAlert' => $shippingGateway->getConfigValue('recipientPreAlert') ? '1' : '0'
         ];
 
-        if ($shippingAddress->getCustomer() !== null) {
-            $data['recipientEmail'] = $shippingAddress->getCustomer()->getEmail();
-        }
-
-        if ($shippingAddress->getCustomer() !== null) {
-            switch ($shippingAddress->getCustomer()->getGender()) {
+        if ($customer !== null) {
+            $data['recipientEmail'] = $customer->getEmail();
+            switch ($customer->getGender()) {
                 case 'm':
                     $data['recipientCivility'] = 'M';
                     break;
