@@ -175,7 +175,7 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
     private function getRecipientValue($shippingGateway, $shipment): array
     {
         $order = $shipment->getOrder();
-        $customer = $order->customer();
+        $customer = $order->getCustomer();
         $shippingAddress = $order->getShippingAddress();
 
         $data = [
