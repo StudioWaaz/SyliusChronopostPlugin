@@ -37,7 +37,7 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             && (int) $expirationDays > 0
         ) {
             $data['scheduledValue'] = [
-                'expirationDate' => (new \DateTimeImmutable('now'))->modify(sprintf('+%d days', (int) $expirationDays)),
+                'expirationDate' => (new \DateTimeImmutable('now'))->modify(sprintf('+%d days', (int) $expirationDays))->format('c'),
             ];
         }
 
