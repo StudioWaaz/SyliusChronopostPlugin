@@ -2,34 +2,16 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
-    bind:
-      string $shippingLabelsPath: '%bitbag.shipping_labels_path%'
 
-  Waaz\SyliusChronopostPlugin\Api\SoapClientInterface:
-    alias: waaz.chronopost_plugin.api.soap_client
-
-  Waaz\SyliusChronopostPlugin\Api\ShippingLabelFetcherInterface:
-    alias: waaz.chronopost_plugin.api.shipping_label_fetcher
-
-  waaz.chronopost_plugin.form.type.chronopost_shipping_gateway:
-    class: Waaz\SyliusChronopostPlugin\Form\Type\ShippingGatewayType
+  Waaz\SyliusChronopostPlugin\Form\Type\ShippingGatewayType:
     tags:
       - { name: bitbag.shipping_gateway_configuration_type, type: 'chronopost', label: "Chronopost" }
       - { name: form.type }
-    autowire: true
 
-  waaz.chronopost_plugin.pickup.provider.chronopost:
-    class : Waaz\SyliusChronopostPlugin\Pickup\Provider\ChronopostProvider
-    arguments:
-      - '@waaz.chronopost_plugin.api.soap_client'
-    tags:
-      - { name: setono_sylius_pickup_point.provider, code: chronopost, label: Chronopost }
+  Waaz\SyliusChronopostPlugin\Pickup\Provider\ChronopostProvider: ~
 
-  waaz.chronopost_plugin.api.soap_client:
-    class: Waaz\SyliusChronopostPlugin\Api\SoapClient
+  Waaz\SyliusChronopostPlugin\Api\SoapClient: ~
 
-  waaz.chronopost_plugin.api.shipping_label_fetcher:
-    class: Waaz\SyliusChronopostPlugin\Api\ShippingLabelFetcher
+  Waaz\SyliusChronopostPlugin\Api\ShippingLabelFetcher: ~
 
-  waaz.chronopost_plugin.event_listener.chronopost_shipping_export:
-    class: Waaz\SyliusChronopostPlugin\EventListener\ShippingExportEventListener
+  Waaz\SyliusChronopostPlugin\EventListener\ShippingExportEventListener: ~

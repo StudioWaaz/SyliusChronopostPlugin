@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Waaz\SyliusChronopostPlugin\Pickup\Provider;
 
+use Waaz\SyliusChronopostPlugin\Api\SoapClient;
 use Waaz\SyliusChronopostPlugin\Api\SoapClientInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
 use Setono\SyliusPickupPointPlugin\DTO\Address;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
@@ -15,7 +17,8 @@ use stdClass;
 final class ChronopostProvider extends Provider
 {
     public function __construct(
-        private SoapClientInterface $soapClient
+        #[Autowire(service: SoapClient::class)]
+        private SoapClientInterface $soapClient,
     )
     {
     }

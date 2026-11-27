@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Waaz\SyliusChronopostPlugin\Api;
 
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -12,7 +13,11 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
     private RequestStack $requestStack;
     private SoapClientInterface $soapClient;
 
-    public function __construct(RequestStack $requestStack, SoapClientInterface $soapClient)
+    public function __construct(
+        RequestStack $requestStack,
+        #[Autowire(service: SoapClient::class)]
+        SoapClientInterface $soapClient,
+    )
     {
         $this->requestStack = $requestStack;
         $this->soapClient = $soapClient;

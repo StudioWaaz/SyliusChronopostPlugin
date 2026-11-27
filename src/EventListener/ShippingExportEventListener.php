@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Waaz\SyliusChronopostPlugin\EventListener;
 
+use Waaz\SyliusChronopostPlugin\Api\ShippingLabelFetcher;
 use Waaz\SyliusChronopostPlugin\Api\ShippingLabelFetcherInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Repository\ShippingExportRepository;
 use Doctrine\Persistence\ObjectManager;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\Assert\Assert;
@@ -35,8 +37,10 @@ final class ShippingExportEventListener
     public function __construct(
         Filesystem $filesystem,
         ShippingExportRepository $shippingExportRepository,
+        #[Autowire('%bitbag.shipping_labels_path%')]
         string $shippingLabelsPath,
-        ShippingLabelFetcherInterface $shippingLabelFetcher
+        #[Autowire(service: ShippingLabelFetcher::class)]
+        ShippingLabelFetcherInterface $shippingLabelFetcher,
     ) {
         $this->filesystem = $filesystem;
         $this->shippingExportRepository = $shippingExportRepository;
