@@ -1,4 +1,16 @@
 services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    bind:
+      string $shippingLabelsPath: '%bitbag.shipping_labels_path%'
+
+  Waaz\SyliusChronopostPlugin\Api\SoapClientInterface:
+    alias: waaz.chronopost_plugin.api.soap_client
+
+  Waaz\SyliusChronopostPlugin\Api\ShippingLabelFetcherInterface:
+    alias: waaz.chronopost_plugin.api.shipping_label_fetcher
+
   waaz.chronopost_plugin.form.type.chronopost_shipping_gateway:
     class: Waaz\SyliusChronopostPlugin\Form\Type\ShippingGatewayType
     tags:
@@ -18,16 +30,6 @@ services:
 
   waaz.chronopost_plugin.api.shipping_label_fetcher:
     class: Waaz\SyliusChronopostPlugin\Api\ShippingLabelFetcher
-    arguments:
-      - '@request_stack'
-      - '@waaz.chronopost_plugin.api.soap_client'
 
   waaz.chronopost_plugin.event_listener.chronopost_shipping_export:
     class: Waaz\SyliusChronopostPlugin\EventListener\ShippingExportEventListener
-    arguments:
-      - '@filesystem'
-      - '@bitbag.repository.shipping_export'
-      - '%bitbag.shipping_labels_path%'
-      - '@waaz.chronopost_plugin.api.shipping_label_fetcher'
-    tags:
-      - { name: kernel.event_listener, event: 'bitbag.shipping_export.export_shipment', method: exportShipment }

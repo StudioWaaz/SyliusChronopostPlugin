@@ -9,10 +9,15 @@ use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Repository\ShippingExportRepository;
 use Doctrine\Persistence\ObjectManager;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\Assert\Assert;
 
-class ShippingExportEventListener
+#[AsEventListener(
+    event: 'bitbag.shipping_export.export_shipment',
+    method: 'exportShipment'
+)]
+final class ShippingExportEventListener
 {
     public const GATEWAY_CODE = 'chronopost';
 
