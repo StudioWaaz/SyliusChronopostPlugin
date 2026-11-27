@@ -10,7 +10,6 @@ services:
     class : Ikuzo\SyliusChronopostPlugin\Pickup\Provider\ChronopostProvider
     arguments:
       - '@ikuzo.chronopost_plugin.api.soap_client'
-      - '@setono_sylius_pickup_point.factory.pickup_point'
     tags:
       - { name: setono_sylius_pickup_point.provider, code: chronopost, label: Chronopost }
 
@@ -20,7 +19,7 @@ services:
   ikuzo.chronopost_plugin.api.shipping_label_fetcher:
     class: Ikuzo\SyliusChronopostPlugin\Api\ShippingLabelFetcher
     arguments:
-      - '@session.flash_bag'
+      - '@request_stack'
       - '@ikuzo.chronopost_plugin.api.soap_client'
 
   ikuzo.chronopost_plugin.event_listener.chronopost_shipping_export:

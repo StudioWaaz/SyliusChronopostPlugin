@@ -5,56 +5,45 @@ declare(strict_types=1);
 namespace Ikuzo\SyliusChronopostPlugin\Pickup\Provider;
 
 use Ikuzo\SyliusChronopostPlugin\Api\SoapClientInterface;
-use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
-use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
-use Webmozart\Assert\Assert;
+use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
+use Setono\SyliusPickupPointPlugin\DTO\Address;
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Provider\Provider;
 use stdClass;
 
+#[AsProvider(code: 'chronopost', name: 'Chronopost')]
 final class ChronopostProvider extends Provider
 {
     public function __construct(
-        private SoapClientInterface $soapClient, 
-        private FactoryInterface $pickupPointFactory
+        private SoapClientInterface $soapClient
     )
     {
     }
 
-    public function transform(stdClass $point): PickupPointInterface
+    public function transform(stdClass $point): PickupPoint
     {
-        $pickupPoint = $this->pickupPointFactory->createNew();
-        Assert::isInstanceOf($pickupPoint, PickupPointInterface::class);   
-
-        $pickupPoint->setCode(new PickupPointCode($point->identifiantChronopostPointA2PAS, $this->getCode(), 'FR'));
-        $pickupPoint->setName($point->nomEnseigne);
-        $pickupPoint->setAddress($point->adresse1);
-        $pickupPoint->setZipCode($point->codePostal);
-        $pickupPoint->setCity($point->localite);
-        $pickupPoint->setCountry('FR');
-        $pickupPoint->setLatitude($point->coordGeoLatitude);
-        $pickupPoint->setLongitude($point->coordGeoLongitude);
+        $pickupPoint = new PickupPoint();
+        $pickupPoint->provider = $this->getCode();
+        $pickupPoint->id = (string) $point->identifiantChronopostPointA2PAS;
+        $pickupPoint->name = $point->nomEnseigne;
+        $pickupPoint->address = $point->adresse1;
+        $pickupPoint->zipCode = $point->codePostal;
+        $pickupPoint->city = $point->localite;
+        $pickupPoint->country = 'FR';
+        $pickupPoint->latitude = (string) $point->coordGeoLatitude;
+        $pickupPoint->longitude = (string) $point->coordGeoLongitude;
 
         return $pickupPoint;
     }
 
-    /**
-     * Will return an array of pickup points
-     *
-     * @return iterable<PickupPointInterface>
-     */
-    public function findPickupPoints(OrderInterface $order): iterable
+    public function findPickupPoints(Address $address): array
     {
-        $pickupPoints = [];
-        $shippingAddress = $order->getShippingAddress();
-        
-        if (null === $shippingAddress) {
+        if (null === $address->postalCode) {
             return [];
         }
 
-        $points = $this->soapClient->findPickupPoints($shippingAddress->getPostcode());
+        $pickupPoints = [];
+        $points = $this->soapClient->findPickupPoints($address->postalCode);
 
         foreach ($points as $point) {
             $pickupPoints[] = $this->transform($point);
@@ -63,9 +52,9 @@ final class ChronopostProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
+    public function findPickupPoint(string $id, array $metadata = []): ?PickupPoint
     {
-        $point = $this->soapClient->findPickupPoint($code->getIdPart());
+        $point = $this->soapClient->findPickupPoint($id);
 
         if ($point) {
             return $this->transform($point);
@@ -74,18 +63,4 @@ final class ChronopostProvider extends Provider
         return null;
     }
 
-    public function findAllPickupPoints(): iterable
-    {
-        dd('ok');
-    }
-
-    public function getCode(): string
-    {
-        return 'chronopost';
-    }
-
-    public function getName(): string
-    {
-        return 'Chronopost';
-    }
 }
