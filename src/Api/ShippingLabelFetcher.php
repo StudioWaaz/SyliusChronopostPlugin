@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Ikuzo\SyliusChronopostPlugin\Api;
 
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class ShippingLabelFetcher implements ShippingLabelFetcherInterface
 {
-    private FlashBagInterface $flashBag;
+    private RequestStack $requestStack;
     private SoapClientInterface $soapClient;
 
-    public function __construct(FlashBagInterface $flashBag, SoapClientInterface $soapClient)
+    public function __construct(RequestStack $requestStack, SoapClientInterface $soapClient)
     {
-        $this->flashBag = $flashBag;
+        $this->requestStack = $requestStack;
         $this->soapClient = $soapClient;
     }
 
@@ -44,7 +45,7 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
         try {
             $this->response = $this->soapClient->createShipment($data);
         } catch (\SoapFault $exception) {
-            $this->flashBag->add(
+            $this->getFlashBag()->add(
                 'error',
                 sprintf(
                     'Chronopost Service for #%s order: %s',
@@ -92,10 +93,18 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
 
         if ($this->guessProductType($shippingGateway, $shipment) === 'CHRONORELAIS')
         {
-            if (method_exists($shipment, 'getPickupPointId') && $shipment->getPickupPointId() && preg_match('/^.*---([a-zA-Z0-9]+)---.*$/', $shipment->getPickupPointId(), $matches)) {
+            $pickupPointId = null;
+            if (method_exists($shipment, 'getPickupPoint')) {
+                $pickupPoint = $shipment->getPickupPoint();
+                $pickupPointId = $pickupPoint?->id;
+            }
+
+            if ($pickupPointId !== null) {
+                $data['recipientRef'] = $pickupPointId;
+            } elseif (method_exists($shipment, 'getPickupPointId') && $shipment->getPickupPointId() && preg_match('/^.*---([a-zA-Z0-9]+)---.*$/', $shipment->getPickupPointId(), $matches)) {
                 $data['recipientRef'] = $matches[1];
             } else {
-                throw new \Exception("Cannot guess pickup point ID for :".$shipment->getPickupPointId(), 1);
+                throw new \Exception('Cannot guess pickup point ID for shipment', 1);
             }
         }
 
@@ -257,11 +266,11 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
     public function getLabelContent(): ?array
     {
         if (!isset($this->response->return->skybill)) {
-            $this->flashBag->add('error', $this->response->return->errorMessage);
+            $this->getFlashBag()->add('error', $this->response->return->errorMessage);
             return null;
         }
 
-        $this->flashBag->add('success', 'bitbag.ui.shipment_data_has_been_exported');
+        $this->getFlashBag()->add('success', 'bitbag.ui.shipment_data_has_been_exported');
 
         return [
             'parcelNumber' => $this->response->return->skybillNumber,
@@ -296,6 +305,11 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
 
         throw new \Exception("Cant guess product type for this expedition. Checkout your gateway config", 1);
 
+    }
+
+    private function getFlashBag(): FlashBagInterface
+    {
+        return $this->requestStack->getSession()->getFlashBag();
     }
 
 }
