@@ -4,7 +4,7 @@
     </a>
 </p>
 
-<h1 align="center">Coliship Chronopost Export Plugin</h1>
+<h1 align="center">Waaz Sylius Chronopost Plugin</h1>
 
 <p align="center">Create Chronopost shipping labels in Sylius .</p>
 <p align="center">/!\ Currently in alpha /!\</p>
@@ -16,7 +16,7 @@ Install & configure [Setono / SyliusPickupPointPlugin](https://github.com/Setono
 
 
 ```
-$ composer require ikuzostudio/chronopost-plugin
+$ composer require waaz/chronopost-plugin
 ```
 
 Add plugin dependencies to your `config/bundles.php` file:
@@ -24,7 +24,7 @@ Add plugin dependencies to your `config/bundles.php` file:
 ```php
 return [
   // ...
-  Ikuzo\SyliusChronopostPlugin\IkuzoSyliusChronopostPlugin::class => ['all' => true],
+  Waaz\SyliusChronopostPlugin\WaazSyliusChronopostPlugin::class => ['all' => true],
 ];
 ```
 

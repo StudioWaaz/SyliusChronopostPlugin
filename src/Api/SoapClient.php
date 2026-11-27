@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Ikuzo\SyliusChronopostPlugin\Api;
+namespace Waaz\SyliusChronopostPlugin\Api;
 
 use KeepItSimple\Http\Soap\MTOMSoapClient;
 

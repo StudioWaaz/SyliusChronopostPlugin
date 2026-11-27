@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Tests\Ikuzo\SyliusChronopostPlugin\Application\Kernel;
+use Tests\Waaz\SyliusChronopostPlugin\Application\Kernel;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ikuzo\SyliusChronopostPlugin\Api;
+namespace Waaz\SyliusChronopostPlugin\Api;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -24,23 +24,12 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             'headerValue' => $this->getHeaderValue($shippingGateway),
             'shipperValue' => $this->getShipperValue($shippingGateway),
             'customerValue' => $this->getCustomerValue($shipment),
-            'recipientValue' => $this->getRecipientValue($shippingGateway, $shipment),
+            'recipientValue' => $this->getRecipientValue($shipment),
             'refValue' => $this->getRefValue($shippingGateway, $shipment),
             'skybillValue' => $this->getSkybillValue($shippingGateway, $shipment, $weight),
             'skybillParamsValue' => $this->getSkybillParams($shippingGateway),
             'password' => $shippingGateway->getConfigValue('password'),
         ]);
-
-        $expirationDays = $shippingGateway->getConfigValue('fresh_expiration_days');
-
-        if (
-            in_array($this->guessProductType($shippingGateway, $shipment), ['CHRONOFRESH13', 'CHRONOFRESH18'], true)
-            && (int) $expirationDays > 0
-        ) {
-            $data['scheduledValue'] = [
-                'expirationDate' => (new \DateTimeImmutable('now'))->modify(sprintf('+%d days', (int) $expirationDays))->format('c'),
-            ];
-        }
 
         try {
             $this->response = $this->soapClient->createShipment($data);
@@ -67,16 +56,12 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
 
     private function getSkybillValue($shippingGateway, $shipment, $weight): array
     {
-        if ($shippingGateway->getConfigValue('weight_unit') === 'g') {
-            $weight /= 1000;
-        }
-
         return [
             'evtCode' => 'DC',
             'productCode' => $this->guessProductCode($this->guessProductType($shippingGateway, $shipment)),
             'shipDate' => date('c'),
             'shipHour' => date('G'),
-            'weight' => ($weight > 0) ? $weight : 1,
+            'Weight' => ($weight > 0) ? $weight : 1,
             'weightUnit' => 'KGM',
             'service' => 0,
             'objectType' => 'MAR',
@@ -142,9 +127,7 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
 
     public function getCustomerValue($shipment): array
     {
-        $order = $shipment->getOrder();
-        $shippingAddress = $order->getShippingAddress();
-        $customer = $order->getCustomer();
+        $shippingAddress = $shipment->getOrder()->getShippingAddress();
 
         $data = [
             'customerCivility' => 'E',
@@ -161,9 +144,12 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             'customerPreAlert' => '0'
         ];
 
-        if ($customer !== null) {
-            $data['customerEmail'] = $customer->getEmail();
-            switch ($customer->getGender()) {
+        if ($shippingAddress->getCustomer() !== null) {
+            $data['customerEmail'] = $shippingAddress->getCustomer()->getEmail();
+        }
+
+        if ($shippingAddress->getCustomer() !== null) {
+            switch ($shippingAddress->getCustomer()->getGender()) {
                 case 'm':
                     $data['customerCivility'] = 'M';
                     break;
@@ -181,11 +167,9 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
         return $data;
     }
 
-    private function getRecipientValue($shippingGateway, $shipment): array
+    private function getRecipientValue($shipment): array
     {
-        $order = $shipment->getOrder();
-        $customer = $order->getCustomer();
-        $shippingAddress = $order->getShippingAddress();
+        $shippingAddress = $shipment->getOrder()->getShippingAddress();
 
         $data = [
             'recipientCivility' => 'E',
@@ -199,12 +183,15 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             'recipientEmail' => null,
             'recipientPhone' => $shippingAddress->getPhoneNumber(),
             'recipientMobilePhone' => $shippingAddress->getPhoneNumber(),
-            'recipientPreAlert' => $shippingGateway->getConfigValue('recipientPreAlert') ? '1' : '0'
+            'recipientPreAlert' => '0'
         ];
 
-        if ($customer !== null) {
-            $data['recipientEmail'] = $customer->getEmail();
-            switch ($customer->getGender()) {
+        if ($shippingAddress->getCustomer() !== null) {
+            $data['recipientEmail'] = $shippingAddress->getCustomer()->getEmail();
+        }
+
+        if ($shippingAddress->getCustomer() !== null) {
+            switch ($shippingAddress->getCustomer()->getGender()) {
                 case 'm':
                     $data['recipientCivility'] = 'M';
                     break;
@@ -255,7 +242,6 @@ class ShippingLabelFetcher implements ShippingLabelFetcherInterface
             'SAMEDAY' => '2P',
             'CHRONORDV' => '2E',
             'CHRONOFRESH13' => '2R',
-            'CHRONOFRESH18' => '5Z',
             'CHRONOFREEZE13' => '2S',
             'SHOPTOSHOP' => '5X'
         ];

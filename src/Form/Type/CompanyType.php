@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ikuzo\SyliusChronopostPlugin\Form\Type;
+namespace Waaz\SyliusChronopostPlugin\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,35 +18,35 @@ final class CompanyType extends AbstractType
     {
         $builder
             ->add('company', TextType::class, [
-                'label' => 'ikuzo.ui.chronopost.shipping_address.company',
+                'label' => 'waaz.ui.chronopost.shipping_address.company',
                 'required' => true
             ])
             ->add('firstname', TextType::class, [
-                'label' => 'ikuzo.ui.chronopost.shipping_address.firstname',
+                'label' => 'waaz.ui.chronopost.shipping_address.firstname',
                 'required' => false
             ])
             ->add('lastname', TextType::class, [
-                'label' => 'ikuzo.ui.chronopost.shipping_address.lastname',
+                'label' => 'waaz.ui.chronopost.shipping_address.lastname',
                 'required' => false
             ])
             ->add('address1', TextType::class, [
-                'label' => 'ikuzo.ui.chronopost.shipping_address.address1',
+                'label' => 'waaz.ui.chronopost.shipping_address.address1',
                 'required' => true
             ])
             ->add('address2', TextType::class, [
-                'label' => 'ikuzo.ui.chronopost.shipping_address.address2',
+                'label' => 'waaz.ui.chronopost.shipping_address.address2',
                 'required' => false
             ])
             ->add('city', TextType::class, [
-                'label' => 'ikuzo.ui.chronopost.shipping_address.city',
+                'label' => 'waaz.ui.chronopost.shipping_address.city',
                 'required' => true
             ])
             ->add('zipcode', TextType::class, [
-                'label' => 'ikuzo.ui.chronopost.shipping_address.zipcode',
+                'label' => 'waaz.ui.chronopost.shipping_address.zipcode',
                 'required' => true
             ])
             ->add('country', ChoiceType::class, [
-                'label' => 'ikuzo.ui.chronopost.shipping_address.country',
+                'label' => 'waaz.ui.chronopost.shipping_address.country',
                 'required' => true,
                 'choices' => [
                     'France' => 'FR',
@@ -59,15 +59,15 @@ final class CompanyType extends AbstractType
                 ]
             ])
             ->add('email', EmailType::class, [
-                'label' => 'ikuzo.ui.chronopost.shipping_address.email',
+                'label' => 'waaz.ui.chronopost.shipping_address.email',
                 'required' => false
             ])
             ->add('phone', TelType::class, [
-                'label' => 'ikuzo.ui.chronopost.shipping_address.phone',
+                'label' => 'waaz.ui.chronopost.shipping_address.phone',
                 'required' => false
             ])
             ->add('mobile', TelType::class, [
-                'label' => 'ikuzo.ui.chronopost.shipping_address.mobile',
+                'label' => 'waaz.ui.chronopost.shipping_address.mobile',
                 'required' => false
             ])
         ;

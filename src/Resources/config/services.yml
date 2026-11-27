@@ -1,33 +1,33 @@
 services:
-  ikuzo.chronopost_plugin.form.type.chronopost_shipping_gateway:
-    class: Ikuzo\SyliusChronopostPlugin\Form\Type\ShippingGatewayType
+  waaz.chronopost_plugin.form.type.chronopost_shipping_gateway:
+    class: Waaz\SyliusChronopostPlugin\Form\Type\ShippingGatewayType
     tags:
       - { name: bitbag.shipping_gateway_configuration_type, type: 'chronopost', label: "Chronopost" }
       - { name: form.type }
     autowire: true
 
-  ikuzo.chronopost_plugin.pickup.provider.chronopost:
-    class : Ikuzo\SyliusChronopostPlugin\Pickup\Provider\ChronopostProvider
+  waaz.chronopost_plugin.pickup.provider.chronopost:
+    class : Waaz\SyliusChronopostPlugin\Pickup\Provider\ChronopostProvider
     arguments:
-      - '@ikuzo.chronopost_plugin.api.soap_client'
+      - '@waaz.chronopost_plugin.api.soap_client'
     tags:
       - { name: setono_sylius_pickup_point.provider, code: chronopost, label: Chronopost }
 
-  ikuzo.chronopost_plugin.api.soap_client:
-    class: Ikuzo\SyliusChronopostPlugin\Api\SoapClient
+  waaz.chronopost_plugin.api.soap_client:
+    class: Waaz\SyliusChronopostPlugin\Api\SoapClient
 
-  ikuzo.chronopost_plugin.api.shipping_label_fetcher:
-    class: Ikuzo\SyliusChronopostPlugin\Api\ShippingLabelFetcher
+  waaz.chronopost_plugin.api.shipping_label_fetcher:
+    class: Waaz\SyliusChronopostPlugin\Api\ShippingLabelFetcher
     arguments:
       - '@request_stack'
-      - '@ikuzo.chronopost_plugin.api.soap_client'
+      - '@waaz.chronopost_plugin.api.soap_client'
 
-  ikuzo.chronopost_plugin.event_listener.chronopost_shipping_export:
-    class: Ikuzo\SyliusChronopostPlugin\EventListener\ShippingExportEventListener
+  waaz.chronopost_plugin.event_listener.chronopost_shipping_export:
+    class: Waaz\SyliusChronopostPlugin\EventListener\ShippingExportEventListener
     arguments:
       - '@filesystem'
       - '@bitbag.repository.shipping_export'
       - '%bitbag.shipping_labels_path%'
-      - '@ikuzo.chronopost_plugin.api.shipping_label_fetcher'
+      - '@waaz.chronopost_plugin.api.shipping_label_fetcher'
     tags:
       - { name: kernel.event_listener, event: 'bitbag.shipping_export.export_shipment', method: exportShipment }

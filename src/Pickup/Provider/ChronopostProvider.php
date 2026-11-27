@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ikuzo\SyliusChronopostPlugin\Pickup\Provider;
+namespace Waaz\SyliusChronopostPlugin\Pickup\Provider;
 
-use Ikuzo\SyliusChronopostPlugin\Api\SoapClientInterface;
+use Waaz\SyliusChronopostPlugin\Api\SoapClientInterface;
 use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
 use Setono\SyliusPickupPointPlugin\DTO\Address;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;

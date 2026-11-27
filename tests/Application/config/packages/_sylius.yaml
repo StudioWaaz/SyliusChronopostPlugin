@@ -18,7 +18,7 @@ sylius_shipping:
     resources:
         shipment:
             classes:
-                model: Tests\Ikuzo\SyliusChronopostPlugin\Application\Entity\Shipment
+                model: Tests\Waaz\SyliusChronopostPlugin\Application\Entity\Shipment
         shipping_method:
             classes:
-                model: Tests\Ikuzo\SyliusChronopostPlugin\Application\Entity\ShippingMethod
+                model: Tests\Waaz\SyliusChronopostPlugin\Application\Entity\ShippingMethod

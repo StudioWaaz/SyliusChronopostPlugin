@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Ikuzo\SyliusChronopostPlugin\Application\Entity;
+namespace Tests\Waaz\SyliusChronopostPlugin\Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointProviderAwareTrait;

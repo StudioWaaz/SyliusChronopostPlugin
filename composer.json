@@ -1,11 +1,11 @@
 {
-    "name": "ikuzostudio/chronopost-plugin",
+    "name": "waaz/chronopost-plugin",
     "type": "sylius-plugin",
     "description": "Integrate Chronopost into Sylius.",
     "keywords": [
         "sylius",
         "sylius-plugin",
-        "ikuzo",
+        "waaz",
         "chronopost"
     ],
     "license": "MIT",
@@ -58,8 +58,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Ikuzo\\SyliusChronopostPlugin\\": "src/",
-            "Tests\\Ikuzo\\SyliusChronopostPlugin\\": "tests/"
+            "Waaz\\SyliusChronopostPlugin\\": "src/",
+            "Tests\\Waaz\\SyliusChronopostPlugin\\": "tests/"
         }
     },
     "autoload-dev": {

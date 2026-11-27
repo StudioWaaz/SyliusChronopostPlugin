@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ikuzo\SyliusChronopostPlugin\EventListener;
+namespace Waaz\SyliusChronopostPlugin\EventListener;
 
-use Ikuzo\SyliusChronopostPlugin\Api\ShippingLabelFetcherInterface;
+use Waaz\SyliusChronopostPlugin\Api\ShippingLabelFetcherInterface;
 use BitBag\SyliusShippingExportPlugin\Entity\ShippingExportInterface;
 use BitBag\SyliusShippingExportPlugin\Repository\ShippingExportRepository;
 use Doctrine\Persistence\ObjectManager;
